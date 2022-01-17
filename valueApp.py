@@ -148,7 +148,7 @@ r2score_formatted= ("{:.2f}%".format(r2score*100))
 st.write("## Model Performance")
 st.write("Coefficient of Determination: ", r2score)
 st.write("Regression models can be evaluated based on their r2 score, or their coefficient of determination. The r2 score tells us what percent of the variation in the y variable can be explained by the variations in the x variables.")
-st.write("In this case, ",r2score_formatted, "of a player's current market value can be explained by the independent variables in this model.")
+st.write("In this case, ",r2score_formatted, "of a player's current market value can be explained by the independent variables in the model.")
 # ***********************************************************
 
 
