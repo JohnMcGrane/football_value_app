@@ -1,2 +1,6 @@
 streamlit==1.1
 matplotlib
+sklearn
+numpy
+beautifulsoup4
+pandas
