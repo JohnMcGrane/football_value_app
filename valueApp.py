@@ -16,7 +16,7 @@ from app_utils import *
 st.title("Undervalued Assets on the Pitch")
 st.write("International football is an industry flush with cash. In addition to on-field performance, there are also egos, narratives, awards, and expectations, each of which play a critical role in determining the market value of a top player. The goal of this application is to build and compare several models that predict player value.")
 st.write("## Data Information")
-st.write("The data used in this analysis is scraped from the German footballing website *Transfermarkt*. For this analysis, data for the 500 most valuable forwards in world football were used. The default data was scraped on 1.15.22, but there is an option to update these data by running a scraping procedure through the app. For more features, statistics from the FIFA 22 videogame were merged. Due to the lack of a unique key to merge both datasets, the final dataset comprises only 400 players.")
+st.write("The data used in this analysis were scraped from the German footballing website *Transfermarkt*. For this analysis, data for the 500 most valuable forwards in world football were used. The default data were scraped on 1.15.22, but there is an option to update these data by running a scraping procedure through the app. For more features, statistics from the FIFA 22 videogame were merged. Due to the lack of a unique key to merge both datasets, the final dataset comprises only 400 players.")
 st.write("## Data")
 # ***********************************************************
 
