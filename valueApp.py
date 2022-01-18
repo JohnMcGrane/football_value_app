@@ -108,10 +108,7 @@ regressor = model_selector(option) # from app_utils.py
 @st.cache(persist=True,suppress_st_warning=True)
 def loo_cv(data,regressor,optn):
 	Y = data['Current Market Value']
-	#if optn == "Yes":
 	X = data.drop(columns=['Current Market Value','Player'])
-	#else:
-	#	X = data.drop(columns=['Current Market Value','Player','Unnamed: 0'])
 	loo = LeaveOneOut()
 	loo.get_n_splits(X)
 	X = np.array(X)
