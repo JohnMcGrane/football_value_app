@@ -81,7 +81,7 @@ st.write("## Explore Data")
 yvariable = st.selectbox('Select feature to view relation to market value',
    ((list(data.columns)[1:])),index=0)
 
-@st.cache(suppress_st_warning=True)
+#@st.cache(suppress_st_warning=True)
 def scatter_plot(x,y):
 	plt.style.use('dark_background')
 	fig, ax = plt.subplots(figsize=(10,6))
