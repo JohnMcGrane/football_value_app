@@ -165,8 +165,10 @@ if display == 'Bar Graph':
 	st.pyplot(figure)
 if display == 'Table':
 	col1, col2 = st.columns(2)
+
 	col1.header("Most Overvalued")
 	col1.write(overvaluedf[::-1][['Player', 'Value']].reset_index(drop=True))
+	
 	col2.header("Most Undervalued")
 	col2.write(undervaluedf[['Player', 'Value']].reset_index(drop=True))
 # ***********************************************************
