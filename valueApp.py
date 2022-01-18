@@ -22,7 +22,7 @@ st.write("## Data")
 
 # DATA SCRAPE OR IMPORT SECTION
 # -----------------------------------------------------------
-@st.cache(suppress_st_warning=True) # persist=True,
+@st.cache(suppress_st_warning=True) 
 def scrape_data(df):
 	headers = {"User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"}
 	column_names = ["Player", "Games Played", "Goals", "Assists", "Age", "Height", "Minutes per Goal", "Total Minutes Played", 

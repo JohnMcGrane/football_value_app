@@ -12,6 +12,39 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import LeaveOneOut
 from sklearn.preprocessing import StandardScaler
 
+def results_visualization(overvaluedf,undervaluedf):
+	plt.style.use('dark_background')
+	fig, ax = plt.subplots(figsize=(13,10))
+
+	y_pos = np.arange(10) 
+	red_cmap = plt.get_cmap('Reds')
+	green_cmap = plt.get_cmap('Greens')
+
+	red_rescale = lambda y: y / (np.min(y))
+	green_rescale = lambda y: y / (np.max(y))
+
+	ax.barh(y_pos, overvaluedf['Value over MV'], align='center', color=red_cmap(red_rescale(overvaluedf['Value over MV'])))
+	ax.barh(y_pos, undervaluedf['Value over MV'][::-1], align='center', color=green_cmap(green_rescale(undervaluedf['Value over MV'][::-1])))
+
+	ax.set_yticks(y_pos)
+	ax.tick_params(axis ='y') 
+	ax.set_yticklabels(overvaluedf['Player'],fontsize=14)
+
+	plt.tick_params(axis='x', which='both', bottom=False,top=False,labelbottom=False)
+	ax2 = ax.twinx() 
+	ax2.set_yticks(np.linspace(0.08,0.925,10))
+	ax2.tick_params(axis ='y')
+	ax2.set_yticklabels(undervaluedf['Player'][::-1],fontsize=14)
+
+	for count, value in enumerate(overvaluedf['Value 10M']):
+		height = np.linspace(0.07,0.905,10)
+		plt.text(x = -22000000,y=height[count],s=value,fontsize=17,weight = 'bold')
+		plt.text(x = 1000000,y=height[count],s=undervaluedf['Value 10M'][::-1].iloc[count],fontsize=17,weight = 'bold')
+
+	ax.set_title(f'Predicted Value Compared to Market',fontsize=20,weight = 'bold')
+	plt.grid(axis='x',color = 'black',alpha = 0.2)
+	return fig
+
 def model_selector(optn):
 	if optn == "GradientBoostingRegressor":
 		regressor = GradientBoostingRegressor(random_state = 3,max_features='sqrt')
@@ -21,7 +54,6 @@ def model_selector(optn):
 		regressor = LinearRegression()
 	return regressor
 
-@st.cache(suppress_st_warning=True)
 def df_format(data1,valuediff1):
 	data1['Value over MV'] = valuediff1
 	valuedf = data1.sort_values(by=['Value over MV'],ascending = False)
@@ -250,39 +282,7 @@ def format_and_merge_data(df1):
 							'Nationality_y','Nationality_x', 'Preferred Foot','Name','Body Type','Best Position'])
 	return merged
 
-@st.cache(suppress_st_warning=True)
-def results_visualization(overvaluedf,undervaluedf):
-	plt.style.use('dark_background')
-	fig, ax = plt.subplots(figsize=(13,10))
 
-	y_pos = np.arange(10) 
-	red_cmap = plt.get_cmap('Reds')
-	green_cmap = plt.get_cmap('Greens')
-
-	red_rescale = lambda y: y / (np.min(y))
-	green_rescale = lambda y: y / (np.max(y))
-
-	ax.barh(y_pos, overvaluedf['Value over MV'], align='center', color=red_cmap(red_rescale(overvaluedf['Value over MV'])))
-	ax.barh(y_pos, undervaluedf['Value over MV'][::-1], align='center', color=green_cmap(green_rescale(undervaluedf['Value over MV'][::-1])))
-
-	ax.set_yticks(y_pos)
-	ax.tick_params(axis ='y') 
-	ax.set_yticklabels(overvaluedf['Player'],fontsize=14)
-
-	plt.tick_params(axis='x', which='both', bottom=False,top=False,labelbottom=False)
-	ax2 = ax.twinx() 
-	ax2.set_yticks(np.linspace(0.08,0.925,10))
-	ax2.tick_params(axis ='y')
-	ax2.set_yticklabels(undervaluedf['Player'][::-1],fontsize=14)
-
-	for count, value in enumerate(overvaluedf['Value 10M']):
-		height = np.linspace(0.07,0.905,10)
-		plt.text(x = -22000000,y=height[count],s=value,fontsize=17,weight = 'bold')
-		plt.text(x = 1000000,y=height[count],s=undervaluedf['Value 10M'][::-1].iloc[count],fontsize=17,weight = 'bold')
-
-	ax.set_title(f'Predicted Value Compared to Market',fontsize=20,weight = 'bold')
-	plt.grid(axis='x',color = 'black',alpha = 0.2)
-	return fig
 
 
 
