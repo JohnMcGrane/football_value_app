@@ -81,6 +81,7 @@ st.write("## Explore Data")
 yvariable = st.selectbox('Select feature to view relation to market value',
    ((list(data.columns)[1:])),index=0)
 
+@st.cache(suppress_st_warning=True)
 def scatter_plot(x,y):
 	plt.style.use('dark_background')
 	fig, ax = plt.subplots(figsize=(10,6))
@@ -145,7 +146,7 @@ r2score_formatted= ("{:.2f}%".format(r2score*100))
 st.write("## Model Performance")
 st.write("Coefficient of Determination: ", r2score)
 st.write("Regression models can be evaluated based on their r2 score, or their coefficient of determination. The r2 score tells us what percent of the variation in the y variable can be explained by the variations in the x variables.")
-st.write("In this case, ",r2score_formatted, "of a player's current market value can be explained by the independent variables in the model.")
+st.write("In this case, ",r2score_formatted, "of the variation in player market value can be explained by the independent variables in the model.")
 # ***********************************************************
 
 
