@@ -1,7 +1,7 @@
 import numpy as np
 import requests
 from bs4 import BeautifulSoup
-import re 
+import re
 import streamlit as st
 import pandas as pd
 import matplotlib as matplotlib
@@ -16,7 +16,7 @@ def results_visualization(overvaluedf,undervaluedf):
 	plt.style.use('dark_background')
 	fig, ax = plt.subplots(figsize=(13,10))
 
-	y_pos = np.arange(10) 
+	y_pos = np.arange(10)
 	red_cmap = plt.get_cmap('Reds')
 	green_cmap = plt.get_cmap('Greens')
 
@@ -27,11 +27,11 @@ def results_visualization(overvaluedf,undervaluedf):
 	ax.barh(y_pos, undervaluedf['Value over MV'][::-1], align='center', color=green_cmap(green_rescale(undervaluedf['Value over MV'][::-1])))
 
 	ax.set_yticks(y_pos)
-	ax.tick_params(axis ='y') 
+	ax.tick_params(axis ='y')
 	ax.set_yticklabels(overvaluedf['Player'],fontsize=14)
 
 	plt.tick_params(axis='x', which='both', bottom=False,top=False,labelbottom=False)
-	ax2 = ax.twinx() 
+	ax2 = ax.twinx()
 	ax2.set_yticks(np.linspace(0.08,0.925,10))
 	ax2.tick_params(axis ='y')
 	ax2.set_yticklabels(undervaluedf['Player'][::-1],fontsize=14)
@@ -74,7 +74,7 @@ def player_page_urls():
 	url = "https://www.transfermarkt.us/spieler-statistik/wertvollstespieler/marktwertetop/plus/ajax/yw1/ausrichtung/Sturm/spielerposition_id/alle/altersklasse/alle/jahrgang/0/land_id/0/kontinent_id/0/yt0/Show/0//page/"
 
 	for page in range(1,21):
-		newurl = url + str(page)  
+		newurl = url + str(page)
 		request = requests.get(newurl,  headers=headers)
 		soup = BeautifulSoup(request.content, 'html.parser')
 		players = soup.find_all("tr", class_=["odd","even"])
@@ -87,37 +87,52 @@ def player_page_urls():
 	return df
 
 def player_name(sp):
-	nameset = sp.find_all(class_="dataName")
-	name = nameset[0].find_all('h1')[0].text.strip()
+    try:
+	    nameset = sp.find_all(class_="dataName")
+	    name = nameset[0].find_all('h1')[0].text.strip()
+	except:
+	    name = np.nan
 	return name
 
 def season_domestic_games(sp):
-	goal_table1 = sp.find_all(attrs={"data-viewport": "Leistungsdaten_Saison"})
-	goal_table = goal_table1[0].find_all('td',class_="zentriert")
-	games_played = goal_table[:5][0].find(text=True)   
-	games_played = zero_stats(games_played)
+    try:
+        goal_table1 = sp.find_all(attrs={"data-viewport": "Leistungsdaten_Saison"})
+        goal_table = goal_table1[0].find_all('td',class_="zentriert")
+        games_played = goal_table[:5][0].find(text=True)
+        games_played = zero_stats(games_played)
+    except:
+        games_played = np.nan
 	return games_played
 
 def season_domestic_goals(sp):
-	goal_table1 = sp.find_all(attrs={"data-viewport": "Leistungsdaten_Saison"})
-	goal_table = goal_table1[0].find_all('td',class_="zentriert")
-	goals = goal_table[:5][1].find(text=True)
-	goals = zero_stats(goals)
+    try:
+        goal_table1 = sp.find_all(attrs={"data-viewport": "Leistungsdaten_Saison"})
+        goal_table = goal_table1[0].find_all('td',class_="zentriert")
+        goals = goal_table[:5][1].find(text=True)
+        goals = zero_stats(goals)
+    except:
+        goals = np.nan
 	return goals
 
 def season_domestic_assists(sp):
-	goal_table1 = sp.find_all(attrs={"data-viewport": "Leistungsdaten_Saison"})
-	goal_table = goal_table1[0].find_all('td',class_="zentriert")
-	assists = goal_table[:5][2].find(text=True)
-	assists = zero_stats(assists)
+    try:
+        goal_table1 = sp.find_all(attrs={"data-viewport": "Leistungsdaten_Saison"})
+        goal_table = goal_table1[0].find_all('td',class_="zentriert")
+        assists = goal_table[:5][2].find(text=True)
+        assists = zero_stats(assists)
+    except:
+        assists = np.nan
 	return assists
 
 def season_domestic_mpg(sp): # minutes per goal
-	goal_table1 = sp.find_all(attrs={"data-viewport": "Leistungsdaten_Saison"})
-	goal_table = goal_table1[0].find_all('td',class_="zentriert")
-	mpg = goal_table[:5][3].find(text=True) 
-	mpg = re.sub("\.", "", mpg)
-	mpg = zero_stats(mpg)
+    try:
+        goal_table1 = sp.find_all(attrs={"data-viewport": "Leistungsdaten_Saison"})
+        goal_table = goal_table1[0].find_all('td',class_="zentriert")
+        mpg = goal_table[:5][3].find(text=True)
+        mpg = re.sub("\.", "", mpg)
+        mpg = zero_stats(mpg)
+    except:
+        mpg = np.nan
 	return mpg
 
 def season_domestic_total_mins(sp): # total minutes played
@@ -128,7 +143,7 @@ def season_domestic_total_mins(sp): # total minutes played
 	total_mins = zero_stats(total_mins)
 	return total_mins
 
-def current_market_value(sp): 
+def current_market_value(sp):
 	value1 = sp.find_all(class_="marktwertentwicklung")[0] # CURRENT VALUE
 	valueString = value1.find(class_="zeile-oben").find_all(class_="right-td")[0].find_all(text=True)
 	if len(valueString) > 1:
@@ -144,7 +159,7 @@ def current_market_value(sp):
 
 def market_value_at_purchase(sp):
 	value = sp.find_all(class_="zelle-mw") # PURCHASE VALUE
-	valueString = value[1].find_all(text=True)[0]   
+	valueString = value[1].find_all(text=True)[0]
 	wage_multiplier = multiplier(valueString)
 	regex_pattern = pattern(valueString)
 	p = re.compile(regex_pattern)
@@ -161,13 +176,13 @@ def purchase_fee(sp):
 	valueString = p.findall(valueString)[0]
 	purchase_fee = floatable_string(valueString, wage_multiplier)
 	return purchase_fee
-	
+
 def player_age(sp):
 	age = sp.find_all(class_="large-6 large-pull-6 small-12 columns spielerdatenundfakten")
 	datastring = age[0].text.strip()
 	age = float(datastring.split("Age",1)[1][2:4])
 	return age
-	
+
 def player_height(sp):
 	ht = sp.find_all(class_="large-6 large-pull-6 small-12 columns spielerdatenundfakten")
 	datastring = ht[0].text.strip()
@@ -178,7 +193,7 @@ def player_height(sp):
 def league_tier(sp):
 	value = sp.find_all(class_="dataZusatzDaten")[0]
 	value1 = value.find_all(class_="dataValue")[0]
-	tier = value1.find_all(text=True)[1].strip() # get league tier and strip whitespace 
+	tier = value1.find_all(text=True)[1].strip() # get league tier and strip whitespace
 	return tier
 
 def league_country(sp):
@@ -222,9 +237,9 @@ def pattern(string):
 		pattern = ".*"
 	return pattern
 
-# Set the multiplier according to value in the millions or thousands 
+# Set the multiplier according to value in the millions or thousands
 def multiplier(string):
-	multiplier = 0 
+	multiplier = 0
 	if "Th" in string:
 		multiplier = 1000
 	elif "m" in string:
@@ -275,10 +290,10 @@ def format_and_merge_data(df1):
 	merge3 = merge2.dropna(subset=['Name'])
 	merge4 = merge3.reset_index(drop=True)
 	merged = merge4.drop(columns=['Jersey Number_y', 'Initial', 'ID', 'Surname', 'Photo',
-							'Flag', 'Club', 'Club Logo', 'Value' , 'Wage', 'Special', 'Work Rate', 'Position', 
+							'Flag', 'Club', 'Club Logo', 'Value' , 'Wage', 'Special', 'Work Rate', 'Position',
 							'Real Face', 'Joined', 'Loaned From', 'Release Clause', 'GKReflexes', 'GKPositioning',
 							'GKKicking', 'GKHandling','GKDiving', 'Weight', 'Contract Valid Until', 'Marking',
-							'index', 'Jersey Number_x', 'Club Country', 'Tier', 'Team', 
+							'index', 'Jersey Number_x', 'Club Country', 'Tier', 'Team',
 							'Nationality_y','Nationality_x', 'Preferred Foot','Name','Body Type','Best Position'])
 	return merged
 
