@@ -87,12 +87,9 @@ def player_page_urls():
 	return df
 
 def player_name(sp):
-    try:
-	    nameset = sp.find_all(class_="dataName")
-	    name = nameset[0].find_all('h1')[0].text.strip()
-	except:
-	    name = np.nan
-	return name
+    nameset = sp.find_all(class_="dataName")
+    name = nameset[0].find_all('h1')[0].text.strip()
+    return name
 
 def season_domestic_games(sp):
     try:
@@ -102,7 +99,7 @@ def season_domestic_games(sp):
         games_played = zero_stats(games_played)
     except:
         games_played = np.nan
-	return games_played
+    return games_played
 
 def season_domestic_goals(sp):
     try:
@@ -112,7 +109,7 @@ def season_domestic_goals(sp):
         goals = zero_stats(goals)
     except:
         goals = np.nan
-	return goals
+    return goals
 
 def season_domestic_assists(sp):
     try:
@@ -122,7 +119,7 @@ def season_domestic_assists(sp):
         assists = zero_stats(assists)
     except:
         assists = np.nan
-	return assists
+    return assists
 
 def season_domestic_mpg(sp): # minutes per goal
     try:
@@ -133,7 +130,7 @@ def season_domestic_mpg(sp): # minutes per goal
         mpg = zero_stats(mpg)
     except:
         mpg = np.nan
-	return mpg
+    return mpg
 
 def season_domestic_total_mins(sp): # total minutes played
 	goal_table1 = sp.find_all(attrs={"data-viewport": "Leistungsdaten_Saison"})
@@ -158,14 +155,17 @@ def current_market_value(sp):
 	return current_val
 
 def market_value_at_purchase(sp):
-	value = sp.find_all(class_="zelle-mw") # PURCHASE VALUE
-	valueString = value[1].find_all(text=True)[0]
-	wage_multiplier = multiplier(valueString)
-	regex_pattern = pattern(valueString)
-	p = re.compile(regex_pattern)
-	valueString = p.findall(valueString)[0]
-	purchase_val = zero_stats(valueString)*wage_multiplier
-	return purchase_val
+    try:
+        value = sp.find_all(class_="zelle-mw") # PURCHASE VALUE
+        valueString = value[1].find_all(text=True)[0]
+        wage_multiplier = multiplier(valueString)
+        regex_pattern = pattern(valueString)
+        p = re.compile(regex_pattern)
+        valueString = p.findall(valueString)[0]
+        purchase_val = zero_stats(valueString)*wage_multiplier
+    except:
+        purchase_val = np.nan
+    return purchase_val
 
 def purchase_fee(sp):
 	value = sp.find_all(class_="zelle-abloese") # PURCHASE FEE
